@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة التطبيقات</title>
+  <style>
+    body {
+      font-family: "Tajawal", Arial, sans-serif;
+      direction: rtl;
+      background: #f5f6fa;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #222;
+    }
+
+    .form-container {
+      max-width: 500px;
+      margin: 0 auto 30px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input[type="text"], input[type="url"], input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      display: block;
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #addButton {
+      background: #28a745;
+      color: white;
+    }
+
+    #addButton:hover {
+      background: #218838;
+    }
+
+    #deleteAllButton {
+      background: #dc3545;
+      color: white;
+      margin-top: 10px;
+    }
+
+    #deleteAllButton:hover {
+      background: #c82333;
+    }
+
+    #appsGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .app-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease-in-out;
+      text-align: center;
+      padding-bottom: 15px;
+    }
+
+    .app-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .app-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-bottom: 1px solid #eee;
+    }
+
+    .app-card h3 {
+      margin: 10px 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .app-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .app-actions a, .app-actions button {
+      background: #28a745;
+      color: white;
+      padding: 8px 14px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .app-actions a:hover {
+      background: #218838;
+    }
+
+    .app-actions button {
+      background: #dc3545;
+    }
+
+    .app-actions button:hover {
+      background: #c82333;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📱 إدارة التطبيقات</h1>
+
+  <div class="form-container">
+    <h2>➕ إضافة تطبيق جديد</h2>
+    <label>اسم التطبيق:
+      <input type="text" id="appName" placeholder="مثال: واتساب" />
+    </label>
+    <label>رابط تحميل التطبيق (Google Drive مباشر):
+      <input type="url" id="appDriveLink" placeholder="https://drive.google.com/uc?export=download&id=..." />
+    </label>
+    <label>تحميل صورة التطبيق:
+      <input type="file" id="appImageFile" accept="image/*" />
+    </label>
+    <button id="addButton">إضافة التطبيق</button>
+    <button id="deleteAllButton">🗑️ حذف جميع التطبيقات</button>
+  </div>
+
+  <h2>📂 التطبيقات المضافة</h2>
+  <div id="appsGrid"></div>
+
+  <script>
+    const appsGrid = document.getElementById('appsGrid');
+    const addButton = document.getElementById('addButton');
+    const deleteAllButton = document.getElementById('deleteAllButton');
+    let apps = JSON.parse(localStorage.getItem('apps')) || [];
+
+    function extractFileNameFromLink(link) {
+      try {
+        const url = new URL(link);
+        const params = url.searchParams;
+        if (params.has('id')) return 'app_' + params.get('id') + '.apk';
+        return 'app.apk';
+      } catch {
+        return 'app.apk';
+      }
+    }
+
+    function displayApps() {
+      appsGrid.innerHTML = '';
+      if (apps.length === 0) {
+        appsGrid.innerHTML = '<p style="text-align:center;color:#888;">لا توجد تطبيقات مضافة بعد.</p>';
+        return;
+      }
+      apps.forEach((app, index) => {
+        const card = document.createElement('div');
+        card.classList.add('app-card');
+        card.innerHTML = `
+          <img src="${app.image}" alt="صورة التطبيق ${app.name}" />
+          <h3>${app.name}</h3>
+          <div class="app-actions">
+            <a href="${app.file}" download="${app.fileName}">⬇️ تحميل</a>
+            <button onclick="deleteApp(${index})">🗑️ حذف</button>
+          </div>
+        `;
+        appsGrid.appendChild(card);
+      });
+    }
+
+    function deleteApp(index) {
+      if (confirm("هل تريد حذف هذا التطبيق؟")) {
+        apps.splice(index, 1);
+        localStorage.setItem('apps', JSON.stringify(apps));
+        displayApps();
+      }
+    }
+
+    addButton.addEventListener('click', () => {
+      const name = document.getElementById('appName').value.trim();
+      const driveLink = document.getElementById('appDriveLink').value.trim();
+      const imageFile = document.getElementById('appImageFile').files[0];
+
+      if (!name || !driveLink || !imageFile) {
+        alert('⚠️ الرجاء تعبئة جميع الحقول.');
+        return;
+      }
+
+      if (!driveLink.startsWith('https://drive.google.com/uc?export=download&id=')) {
+        alert('⚠️ الرجاء إدخال رابط تحميل مباشر صحيح من Google Drive.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const imageBase64 = e.target.result;
+        const fileName = extractFileNameFromLink(driveLink);
+        apps.push({ name, file: driveLink, fileName, image: imageBase64 });
+        localStorage.setItem('apps', JSON.stringify(apps));
+        displayApps();
+
+        document.getElementById('appName').value = '';
+        document.getElementById('appDriveLink').value = '';
+        document.getElementById('appImageFile').value = '';
+      };
+      reader.readAsDataURL(imageFile);
+    });
+
+    deleteAllButton.addEventListener('click', () => {
+      if (confirm("هل تريد حذف جميع التطبيقات؟")) {
+        apps = [];
+        localStorage.setItem('apps', JSON.stringify(apps));
+        displayApps();
+      }
+    });
+
+    // التزامن مع أي صفحة أخرى تستخدم نفس localStorage
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'apps') {
+        apps = JSON.parse(localStorage.getItem('apps')) || [];
+        displayApps();
+      }
+    });
+
+    displayApps();
+  </script>
+
+</body>
+</html>

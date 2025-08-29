@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>مكتبة التطبيقات</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #4b6cb7;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+    }
+    main {
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .app-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .app-card img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 15px;
+    }
+    .app-card h3 {
+      margin: 10px 0 5px 0;
+      font-size: 18px;
+      word-break: break-word;
+    }
+    .app-card a, .app-card button, .app-card span {
+      display: inline-block;
+      padding: 8px 15px;
+      border-radius: 5px;
+      margin-top: 10px;
+      font-size: 14px;
+      user-select: none;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .app-card a {
+      background-color: #4b6cb7;
+      color: white;
+    }
+    .app-card a:hover {
+      background-color: #3a5491;
+    }
+    .app-card button {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+    }
+    .app-card button:hover {
+      background-color: #c82333;
+    }
+    .app-card span {
+      background-color: #999;
+      cursor: default;
+      color: white;
+    }
+    .no-apps {
+      text-align: center;
+      color: #777;
+      font-size: 1.2rem;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>مكتبة التطبيقات</h1>
+  </header>
+
+  <main>
+    <div class="apps-grid" id="appsGrid"></div>
+    <div id="noAppsMessage" class="no-apps" style="display:none;">لا توجد تطبيقات لعرضها.</div>
+  </main>
+
+  <script>
+    const appsGrid = document.getElementById('appsGrid');
+    const noAppsMessage = document.getElementById('noAppsMessage');
+
+    function displayApps() {
+      const apps = JSON.parse(localStorage.getItem('apps')) || [];
+      appsGrid.innerHTML = '';
+
+      if (apps.length === 0) {
+        noAppsMessage.style.display = 'block';
+        return;
+      } else {
+        noAppsMessage.style.display = 'none';
+      }
+
+      apps.forEach((app, index) => {
+        const card = document.createElement('div');
+        card.classList.add('app-card');
+
+        let downloadLink = '';
+        if (app.file) {
+          downloadLink = `<a href="${app.file}" download="${app.fileName}">⬇️ تحميل</a>`;
+        } else {
+          downloadLink = `<span title="ملف التطبيق غير متوفر للتحميل">تحميل غير متاح</span>`;
+        }
+
+        // إضافة زر حذف لكل تطبيق (اختياري)
+        card.innerHTML = `
+          <img src="${app.image}" alt="صورة التطبيق ${app.name}" />
+          <h3>${app.name}</h3>
+          <div>
+            ${downloadLink}
+            <button onclick="deleteApp(${index})">🗑️ حذف</button>
+          </div>
+        `;
+        appsGrid.appendChild(card);
+      });
+    }
+
+    function deleteApp(index) {
+      const apps = JSON.parse(localStorage.getItem('apps')) || [];
+      if(confirm("هل تريد حذف هذا التطبيق؟")) {
+        apps.splice(index,1);
+        localStorage.setItem('apps', JSON.stringify(apps));
+        displayApps();
+      }
+    }
+
+    // عرض التطبيقات عند فتح الصفحة
+    displayApps();
+
+    // تحديث تلقائي عند أي تغيير من تبويب آخر
+    window.addEventListener('storage', (e) => {
+      if(e.key === 'apps') {
+        displayApps();
+      }
+    });
+  </script>
+</body>
+</html>

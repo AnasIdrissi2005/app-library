@@ -4,29 +4,221 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>مكتبة التطبيقات</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     /* الخطوط والألوان */
-    @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
-
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
+    :root {
+      --primary-color: #0d47a1;
+      --secondary-color: #1976d2;
+      --accent-color: #42a5f5;
+      --background-color: #f0f4f8;
+      --card-color: #fff;
+      --text-color: #333;
+      --shadow-color: rgba(13, 71, 161, 0.15);
+      --shadow-hover-color: rgba(13, 71, 161, 0.3);
+    }
     body {
       font-family: 'Cairo', Arial, sans-serif;
-      background: #f0f4f8;
+      background: var(--background-color);
       margin: 0;
       padding: 20px;
-      color: #333;
+      color: var(--text-color);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
     }
-
     h1 {
       font-size: 2.5rem;
       margin-bottom: 30px;
-      color: #0d47a1;
+      color: var(--primary-color);
       user-select: none;
+      text-align: center;
     }
-
+    
+    /* زر تبديل الوضع */
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--card-color);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* قسم التطبيقات المميزة */
+    .featured-section {
+      width: 100%;
+      max-width: 1200px;
+      margin-bottom: 40px;
+    }
+    .featured-section h2 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .featured-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      padding-bottom: 15px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-color) #f1f1f1;
+    }
+    .featured-container::-webkit-scrollbar {
+      height: 8px;
+    }
+    .featured-container::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    .featured-container::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 10px;
+    }
+    .featured-app {
+      min-width: 280px;
+      background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+      color: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(13, 71, 161, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .featured-app img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px;
+      margin-bottom: 15px;
+    }
+    .featured-app .app-name {
+      color: white;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+    .featured-app .app-category {
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 15px;
+    }
+    .featured-app .download {
+      background: white;
+      color: var(--primary-color);
+      margin-top: auto;
+    }
+    
+    /* قسم الإحصائيات */
+    .stats-section {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 800px;
+    }
+    .stat-card {
+      background: var(--card-color);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px var(--shadow-color);
+      flex: 1;
+      min-width: 150px;
+      transition: transform 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 5px;
+    }
+    .stat-label {
+      color: var(--text-color);
+      font-size: 0.9rem;
+    }
+    
+    /* البحث */
+    .search-container {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    .search-box {
+      width: 100%;
+      padding: 15px 50px 15px 20px;
+      border: 2px solid var(--accent-color);
+      border-radius: 50px;
+      font-size: 1rem;
+      font-family: 'Cairo', Arial, sans-serif;
+      outline: none;
+      transition: border-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .search-box:focus {
+      border-color: var(--primary-color);
+    }
+    .search-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-color);
+      font-size: 1.2rem;
+    }
+    
+    /* التصنيفات */
+    .categories {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      width: 100%;
+      max-width: 800px;
+    }
+    .category {
+      padding: 8px 16px;
+      background: var(--card-color);
+      border-radius: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+    .category:hover, .category.active {
+      background: var(--primary-color);
+      color: white;
+      transform: translateY(-3px);
+    }
+    
+    /* قائمة التطبيقات */
     #app-list {
       display: flex;
       flex-wrap: wrap;
@@ -35,11 +227,10 @@
       width: 100%;
       max-width: 1200px;
     }
-
     .app-card {
-      background: #fff;
+      background: var(--card-color);
       border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(13, 71, 161, 0.15);
+      box-shadow: 0 8px 20px var(--shadow-color);
       padding: 20px;
       width: 220px;
       text-align: center;
@@ -48,14 +239,13 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      position: relative;
     }
-
     .app-card:hover {
       transform: translateY(-8px);
-      box-shadow: 0 12px 30px rgba(13, 71, 161, 0.3);
+      box-shadow: 0 12px 30px var(--shadow-hover-color);
       cursor: pointer;
     }
-
     .app-card img {
       width: 120px;
       height: 120px;
@@ -67,20 +257,71 @@
       box-sizing: border-box;
       user-select: none;
     }
-
     .app-name {
       font-size: 1.2rem;
       font-weight: 700;
-      margin-bottom: 15px;
-      color: #0d47a1;
+      margin-bottom: 10px;
+      color: var(--primary-color);
       min-height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
-
+    .app-category {
+      font-size: 0.9rem;
+      color: var(--accent-color);
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .app-rating {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      gap: 5px;
+    }
+    .stars {
+      color: #ffc107;
+      font-size: 1rem;
+    }
+    .rating-value {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .favorite-btn, .share-btn {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+    .favorite-btn {
+      top: 15px;
+      left: 15px;
+      color: #e91e63;
+    }
+    .share-btn {
+      bottom: 15px;
+      left: 15px;
+      color: var(--primary-color);
+      font-size: 1rem;
+    }
+    .favorite-btn:hover, .share-btn:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+    .favorite-btn.active .favorite-icon {
+      color: #e91e63;
+    }
     .download {
-      background: #1976d2;
+      background: var(--secondary-color);
       color: white;
       padding: 10px 18px;
       text-decoration: none;
@@ -89,69 +330,536 @@
       box-shadow: 0 4px 12px rgba(25, 118, 210, 0.4);
       transition: background-color 0.3s ease, box-shadow 0.3s ease;
       user-select: none;
+      margin-top: auto;
     }
-
     .download:hover,
     .download:focus {
-      background: #0d47a1;
+      background: var(--primary-color);
       box-shadow: 0 6px 18px rgba(13, 71, 161, 0.6);
       outline: none;
     }
-
+    
+    /* مؤشر التحميل */
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(13, 71, 161, 0.2);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s ease-in-out infinite;
+      margin: 50px auto;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* رسالة عدم وجود نتائج */
+    .no-results {
+      text-align: center;
+      font-size: 1.2rem;
+      color: var(--primary-color);
+      margin: 30px 0;
+    }
+    
+    /* الإشعارات */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--primary-color);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 50px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .notification.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    /* الوضع المظلم */
+    body.dark-mode {
+      --background-color: #121212;
+      --card-color: #1e1e1e;
+      --text-color: #e0e0e0;
+      --shadow-color: rgba(0, 0, 0, 0.3);
+      --shadow-hover-color: rgba(0, 0, 0, 0.5);
+    }
+    body.dark-mode .search-box {
+      background: var(--card-color);
+      color: var(--text-color);
+      border-color: var(--accent-color);
+    }
+    body.dark-mode .category {
+      background: var(--card-color);
+      color: var(--text-color);
+    }
+    body.dark-mode .app-card, body.dark-mode .stat-card {
+      background: var(--card-color);
+    }
+    body.dark-mode .app-name {
+      color: var(--accent-color);
+    }
+    body.dark-mode .app-category {
+      color: #90caf9;
+    }
+    body.dark-mode .rating-value {
+      color: #bbb;
+    }
+    body.dark-mode .theme-toggle {
+      background: var(--card-color);
+      color: var(--accent-color);
+    }
+    body.dark-mode .favorite-btn, body.dark-mode .share-btn {
+      background: rgba(30, 30, 30, 0.8);
+    }
+    body.dark-mode .favorite-btn:hover, body.dark-mode .share-btn:hover {
+      background: var(--card-color);
+    }
+    
     /* Responsive */
     @media (max-width: 600px) {
+      h1 {
+        font-size: 2rem;
+      }
       .app-card {
         width: 100%;
         max-width: 320px;
+      }
+      .featured-app {
+        min-width: 250px;
       }
     }
   </style>
 </head>
 <body>
+  <button id="theme-toggle" class="theme-toggle" aria-label="تبديل الوضع">
+    <i class="fas fa-moon"></i>
+  </button>
+  
   <h1>📱 مكتبة التطبيقات</h1>
-  <div id="app-list" aria-live="polite" aria-label="قائمة التطبيقات"></div>
-
+  
+  <div class="featured-section">
+    <h2>🌟 التطبيقات المميزة</h2>
+    <div class="featured-container" id="featured-apps"></div>
+  </div>
+  
+  <div class="stats-section">
+    <div class="stat-card">
+      <div class="stat-number" id="total-apps">0</div>
+      <div class="stat-label">إجمالي التطبيقات</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="total-categories">0</div>
+      <div class="stat-label">التصنيفات</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" id="total-downloads">0</div>
+      <div class="stat-label">التحميلات</div>
+    </div>
+  </div>
+  
+  <div class="search-container">
+    <input type="text" class="search-box" id="search" placeholder="ابحث عن تطبيق..." aria-label="بحث عن التطبيقات">
+    <span class="search-icon">🔍</span>
+  </div>
+  
+  <div class="categories" id="categories">
+    <div class="category active" data-category="all">الكل</div>
+  </div>
+  
+  <div id="app-list" aria-live="polite" aria-label="قائمة التطبيقات">
+    <div class="loader"></div>
+  </div>
+  
   <script>
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQarjS01euTEmqXyvXw8FydmylesAQGJmDd4wt6bueAPywUmaky7znxtiH2TiesQDFCobdG3gbra8wM/pub?gid=0&single=true&output=csv";
-
+    let appsData = [];
+    let filteredApps = [];
+    let activeCategory = "all";
+    
+    // إعداد الوضع المظلم
+    function setupDarkMode() {
+      const themeToggle = document.getElementById('theme-toggle');
+      const body = document.body;
+      
+      // التحقق من تفضيل المستخدم المحفوظ
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+      
+      // تبديل الوضع
+      themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const isDarkMode = body.classList.contains('dark-mode');
+        
+        // تحديث الأيقونة
+        themeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        
+        // حفظ التفضيل
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+      });
+    }
+    
+    // تحميل التطبيقات من Google Sheets
     async function loadApps() {
       try {
         const response = await fetch(sheetURL);
         if (!response.ok) throw new Error("فشل تحميل البيانات");
+        
         const data = await response.text();
-
-        const rows = data.trim().split("\n").map(r => {
-          // تعويض الفواصل داخل النصوص المحتملة
-          // هنا نفترض أن البيانات بسيطة بدون فواصل داخل القيم
-          return r.split(",");
-        });
-
+        const rows = parseCSV(data);
+        
+        if (rows.length < 2) throw new Error("لا توجد بيانات كافية");
+        
         const headers = rows[0];
-        const appList = document.getElementById("app-list");
-        appList.innerHTML = "";
-
+        appsData = [];
+        
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i];
-          if (row.length < 4) continue;
-
-          const [name, file, fileName, image] = row;
-
-          const card = document.createElement("div");
-          card.className = "app-card";
-          card.innerHTML = `
-            <img src="${image}" alt="شعار التطبيق ${name}" loading="lazy" />
-            <div class="app-name">${name}</div>
-            <a class="download" href="${file}" download="${fileName}" aria-label="تحميل التطبيق ${name}">⬇️ تحميل</a>
-          `;
-          appList.appendChild(card);
+          if (row.length < 6) continue; // الآن نتوقع 6 أعمدة (بما في ذلك التقييم)
+          
+          const [name, file, fileName, image, category, rating] = row;
+          appsData.push({
+            name: name.trim(),
+            file: file.trim(),
+            fileName: fileName.trim(),
+            image: image.trim(),
+            category: category.trim() || "غير مصنف",
+            rating: parseFloat(rating.trim()) || (Math.random() * 2 + 3).toFixed(1) // تقييم عشوائي إذا لم يكن موجودًا
+          });
         }
+        
+        // استخراج التصنيفات الفريدة
+        const categories = [...new Set(appsData.map(app => app.category))];
+        renderCategories(categories);
+        
+        // عرض التطبيقات المميزة
+        renderFeaturedApps();
+        
+        // تحديث الإحصائيات
+        updateStats();
+        
+        // عرض التطبيقات
+        filteredApps = [...appsData];
+        renderApps();
+        
+        // إضافة مستمعات الأحداث
+        setupEventListeners();
+        
       } catch (error) {
         console.error(error);
         document.getElementById("app-list").innerHTML = "<p>حدث خطأ أثناء تحميل التطبيقات. الرجاء المحاولة لاحقًا.</p>";
       }
     }
-
-    loadApps();
+    
+    // دالة لتحليل CSV بشكل أفضل
+    function parseCSV(csvText) {
+      const lines = csvText.trim().split('\n');
+      const result = [];
+      
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        const row = [];
+        let insideQuotes = false;
+        let currentValue = '';
+        
+        for (let j = 0; j < line.length; j++) {
+          const char = line[j];
+          
+          if (char === '"') {
+            insideQuotes = !insideQuotes;
+          } else if (char === ',' && !insideQuotes) {
+            row.push(currentValue);
+            currentValue = '';
+          } else {
+            currentValue += char;
+          }
+        }
+        
+        row.push(currentValue);
+        result.push(row);
+      }
+      
+      return result;
+    }
+    
+    // عرض التطبيقات المميزة
+    function renderFeaturedApps() {
+      const featuredContainer = document.getElementById('featured-apps');
+      if (!featuredContainer) return;
+      
+      // اختيار 3 تطبيقات عشوائية كتطبيقات مميزة
+      const featuredApps = [...appsData].sort(() => 0.5 - Math.random()).slice(0, 3);
+      
+      featuredContainer.innerHTML = '';
+      
+      featuredApps.forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'featured-app';
+        card.innerHTML = `
+          <img src="${app.image}" alt="شعار التطبيق ${app.name}" loading="lazy" />
+          <div class="app-name">${app.name}</div>
+          <div class="app-category">${app.category}</div>
+          <a class="download" href="${app.file}" download="${app.fileName}" aria-label="تحميل التطبيق ${app.name}">⬇️ تحميل</a>
+        `;
+        featuredContainer.appendChild(card);
+      });
+    }
+    
+    // تحديث الإحصائيات
+    function updateStats() {
+      // إجمالي التطبيقات
+      document.getElementById('total-apps').textContent = appsData.length;
+      
+      // إجمالي التصنيفات
+      const categories = [...new Set(appsData.map(app => app.category))];
+      document.getElementById('total-categories').textContent = categories.length;
+      
+      // إجمالي التحميلات (قيمة وهمية للعرض)
+      document.getElementById('total-downloads').textContent = 
+        (appsData.length * 1250).toLocaleString('ar-EG');
+    }
+    
+    // عرض التصنيفات
+    function renderCategories(categories) {
+      const categoriesContainer = document.getElementById("categories");
+      categoriesContainer.innerHTML = '<div class="category active" data-category="all">الكل</div>';
+      
+      categories.forEach(category => {
+        const categoryElement = document.createElement("div");
+        categoryElement.className = "category";
+        categoryElement.setAttribute("data-category", category);
+        categoryElement.textContent = category;
+        categoriesContainer.appendChild(categoryElement);
+      });
+    }
+    
+    // عرض التطبيقات
+    function renderApps() {
+      const appList = document.getElementById("app-list");
+      
+      if (filteredApps.length === 0) {
+        appList.innerHTML = '<div class="no-results">لم يتم العثور على تطبيقات تطابق بحثك</div>';
+        return;
+      }
+      
+      appList.innerHTML = "";
+      
+      filteredApps.forEach(app => {
+        const card = document.createElement("div");
+        card.className = "app-card";
+        
+        // إنشاء نجوم التقييم
+        const fullStars = Math.floor(app.rating);
+        const halfStar = app.rating % 1 >= 0.5 ? 1 : 0;
+        const emptyStars = 5 - fullStars - halfStar;
+        
+        let starsHtml = '';
+        for (let i = 0; i < fullStars; i++) {
+          starsHtml += '★';
+        }
+        if (halfStar) {
+          starsHtml += '☆';
+        }
+        for (let i = 0; i < emptyStars; i++) {
+          starsHtml += '☆';
+        }
+        
+        card.innerHTML = `
+          <button class="favorite-btn" aria-label="إضافة للمفضلة">
+            <span class="favorite-icon">♡</span>
+          </button>
+          <img src="${app.image}" alt="شعار التطبيق ${app.name}" loading="lazy" />
+          <div class="app-name">${app.name}</div>
+          <div class="app-category">${app.category}</div>
+          <div class="app-rating">
+            <span class="stars">${starsHtml}</span>
+            <span class="rating-value">${app.rating}</span>
+          </div>
+          <a class="download" href="${app.file}" download="${app.fileName}" aria-label="تحميل التطبيق ${app.name}">⬇️ تحميل</a>
+          <button class="share-btn" aria-label="مشاركة التطبيق">
+            <i class="fas fa-share-alt"></i>
+          </button>
+        `;
+        appList.appendChild(card);
+      });
+      
+      // إعداد أزرار المفضلة والمشاركة
+      setupFavoriteButtons();
+      setupShareButtons();
+      setupDownloadTracking();
+    }
+    
+    // إعداد أزرار المفضلة
+    function setupFavoriteButtons() {
+      document.querySelectorAll('.favorite-btn').forEach(btn => {
+        // التحقق مما إذا كان التطبيق في المفضلة
+        const appName = btn.closest('.app-card').querySelector('.app-name').textContent;
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        if (favorites.includes(appName)) {
+          btn.classList.add('active');
+        }
+        
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          this.classList.toggle('active');
+          const appName = this.closest('.app-card').querySelector('.app-name').textContent;
+          
+          // حفظ المفضلة في localStorage
+          let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+          if (this.classList.contains('active')) {
+            if (!favorites.includes(appName)) {
+              favorites.push(appName);
+              showNotification(`تمت إضافة ${appName} إلى المفضلة`);
+            }
+          } else {
+            favorites = favorites.filter(fav => fav !== appName);
+            showNotification(`تمت إزالة ${appName} من المفضلة`);
+          }
+          localStorage.setItem('favorites', JSON.stringify(favorites));
+        });
+      });
+    }
+    
+    // إعداد أزرار المشاركة
+    function setupShareButtons() {
+      document.querySelectorAll('.share-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const appCard = this.closest('.app-card');
+          const appName = appCard.querySelector('.app-name').textContent;
+          const appUrl = window.location.href;
+          
+          // التحقق من دعم Web Share API
+          if (navigator.share) {
+            navigator.share({
+              title: appName,
+              text: `تحقق من تطبيق ${appName} في مكتبة التطبيقات`,
+              url: appUrl
+            })
+            .then(() => showNotification(`تمت مشاركة ${appName} بنجاح`))
+            .catch(err => console.log('خطأ في المشاركة:', err));
+          } else {
+            // بديل للمتصفحات التي لا تدعم Web Share API
+            const shareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(`تحقق من تطبيق ${appName}: ${appUrl}`)}`;
+            window.open(shareUrl, '_blank');
+          }
+        });
+      });
+    }
+    
+    // تتبع التحميلات
+    function setupDownloadTracking() {
+      document.querySelectorAll('.download').forEach(link => {
+        link.addEventListener('click', function(e) {
+          const appName = this.closest('.app-card').querySelector('.app-name').textContent;
+          
+          // حفظ التحميل في localStorage
+          let downloads = JSON.parse(localStorage.getItem('downloads') || '{}');
+          downloads[appName] = (downloads[appName] || 0) + 1;
+          localStorage.setItem('downloads', JSON.stringify(downloads));
+          
+          // إظهار رسالة نجاح
+          showNotification(`جاري تحميل ${appName}...`);
+        });
+      });
+    }
+    
+    // إظهار الإشعارات
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.classList.add('show');
+      }, 10);
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
+    }
+    
+    // إعداد مستمعي الأحداث
+    function setupEventListeners() {
+      // البحث
+      const searchBox = document.getElementById("search");
+      searchBox.addEventListener("input", handleSearch);
+      
+      // التصنيفات
+      const categoriesContainer = document.getElementById("categories");
+      categoriesContainer.addEventListener("click", handleCategoryClick);
+    }
+    
+    // معالجة البحث
+    function handleSearch(e) {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      
+      if (searchTerm === "") {
+        filterByCategory(activeCategory);
+        return;
+      }
+      
+      filteredApps = appsData.filter(app => 
+        app.name.toLowerCase().includes(searchTerm) || 
+        app.category.toLowerCase().includes(searchTerm)
+      );
+      
+      renderApps();
+    }
+    
+    // معالجة النقر على التصنيفات
+    function handleCategoryClick(e) {
+      if (!e.target.classList.contains("category")) return;
+      
+      // تحديث التصنيف النشط
+      document.querySelectorAll(".category").forEach(cat => {
+        cat.classList.remove("active");
+      });
+      e.target.classList.add("active");
+      
+      // تصفية التطبيقات حسب التصنيف
+      const category = e.target.getAttribute("data-category");
+      activeCategory = category;
+      filterByCategory(category);
+    }
+    
+    // تصفية التطبيقات حسب التصنيف
+    function filterByCategory(category) {
+      if (category === "all") {
+        filteredApps = [...appsData];
+      } else {
+        filteredApps = appsData.filter(app => app.category === category);
+      }
+      
+      // إعادة تطبيق البحث إذا كان هناك نص في مربع البحث
+      const searchTerm = document.getElementById("search").value.toLowerCase().trim();
+      if (searchTerm !== "") {
+        filteredApps = filteredApps.filter(app => 
+          app.name.toLowerCase().includes(searchTerm) || 
+          app.category.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      renderApps();
+    }
+    
+    // تحميل التطبيقات عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', () => {
+      setupDarkMode();
+      loadApps();
+    });
   </script>
 </body>
 </html>
